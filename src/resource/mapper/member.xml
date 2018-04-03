@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- //resource/mapper/member.xml -->
+<!-- //네임스페이스는 다른 매퍼와 구분, 명칭은 마음대로 해도 된다. -->
+<!-- //단 권장 명칭은 해당 dao의 완전한 이름으로 한다. -->
+<mapper namespace="com.study.member.dao.IMemberDao">
+
+	<select id="getMemberList" resultType="member">
+		SELECT *
+		FROM (SELECT rownum rn, a.*
+		FROM (
+		SELECT
+		mem_id
+		,mem_name
+		,mem_pwd
+		,mem_phone
+		,mem_email
+		,TO_CHAR(reg_date,'YYYY/MM/DD') AS reg_date
+		FROM tb_member2
+		ORDER BY mem_id ASC
+
+		)a
+		) b
+		WHERE rn between ? and ?
+	</select>
+	
+
+	 <select id="getMember" 
+  			parameterType="String"
+  			resultType="com.study.member.vo.Member"
+  			>
+  	 SELECT                                                    
+			 mem_id                                            
+			,mem_name                                            
+			,mem_pwd                                             
+			,mem_phone                                           
+			,mem_email                                           
+			,TO_CHAR(reg_date,'YYYY/MM/DD HH24:MI') AS reg_date          
+		FROM tb_member           
+	WHERE mem_id = #{mem_id}
+  </select>
+  
+  
+  <insert id="insertMember" parameterType="com.study.member.vo.Member">
+	   INSERT tb_member  
+	   SET mem_name  =    #{mem_name}
+	    	 , mem_phone = #{mem_phone}
+	    	 , mem_email =   #{mem_email}
+	   VALUES mem_id =    #{mem_id}
+  </insert>
+  
+  
+  
+  <update id="updateMember" parameterType="com.study.member.vo.Member">
+  UPDATE tb_member   
+   SET mem_name  = #{mem_name}
+     , mem_phone = #{mem_phone}
+     , mem_email = #{mem_email}
+ VALUES mem_id = #{mem_id}
+  </update>
+  
+  
+  
+  <delete id="deleteMember" parameterType="com.study.member.vo.Member">
+  	DELETE tb_member
+ 	WHERE mem_id = #{mem_id}
+ 	and mem_id = #{mem_id}
+  </delete>
+	
+	
+	
+
+</mapper>
